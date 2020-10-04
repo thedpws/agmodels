@@ -164,7 +164,7 @@ class Submission(models.Model):
     def __str__(self):
         return f'{self.assignment}: {self.student} submission #{self.attempt} (Course {self.course})'
 
-    lms_id = models.CharField(max_length=20)
+    lms_id = models.CharField(max_length=20, db_index=True)
 
     submitted_at = models.DateTimeField()
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
