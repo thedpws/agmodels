@@ -23,6 +23,7 @@ class Assignment(models.Model):
     lms_id = models.CharField(max_length=20, blank=True)
 
     enabled = models.BooleanField(default=True)
+    error = models.BooleanField(default=False)
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
