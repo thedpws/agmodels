@@ -1,6 +1,9 @@
 from django.db import models
 
 
+class Status(models.Model):
+    update_date = models.DateTimeField(auto_now=True)
+
 class Course(models.Model):
     lms_id = models.CharField(max_length=20)
 
