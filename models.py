@@ -25,7 +25,7 @@ class Assignment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lms_id = models.CharField(max_length=20, blank=True)
 
-    enabled = models.BooleanField(default=True)
+    enabled = models.BooleanField(default=False)
     error = models.BooleanField(default=False)
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
