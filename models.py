@@ -61,7 +61,6 @@ class Task(models.Model):
 
     correct_program = models.FileField(upload_to=task_resource_function, blank=True)
 
-    task_resources = models.FileField(upload_to=task_filename_function, blank=True)
 
     name = models.CharField(max_length=20)
 
@@ -204,3 +203,21 @@ class CodeSimilarity(models.Model):
     submission_2 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_2")
     similar_code_2 = models.CharField(max_length=50_000)
     percent_similar_2 = models.DecimalField(decimal_places=2, max_digits=4)
+
+
+def resource_filepath_function(resource, filename):
+    if resource.task:
+        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.description if c.isalnum()])}/resources/{filename}'
+    elif resource.testcase_as_input:
+        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()])}/inputs/{filename}'
+    elif resource.testcase_as_output:
+        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()])}/outputs/{filename}'
+
+
+class Resource(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True, related_name='task_resources')
+    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
+    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
+
+    file = models.FileField(upload_to=resource_filepath_function)
+
