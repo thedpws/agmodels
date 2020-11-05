@@ -205,11 +205,13 @@ class CodeSimilarity(models.Model):
 
 def resource_filepath_function(resource, filename):
     if resource.task:
-        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.description if c.isalnum()])}/resources/{filename}'
+        return f'resources/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.description if c.isalnum()])}/resources/{filename}'
     elif resource.testcase_as_input:
-        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()])}/inputs/{filename}'
+        return f'resources/{resource.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()])}/inputs/{filename}'
     elif resource.testcase_as_output:
-        return f'uploads/{resource.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()])}/outputs/{filename}'
+        return f'resources/{resource.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()])}/outputs/{filename}'
+    else:
+        return f'orphan_resources/{filename}'
 
 
 class Resource(models.Model):
