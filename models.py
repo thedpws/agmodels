@@ -1,4 +1,5 @@
 from django.db import models
+from .hipergator_storage import HiPerGatorStorage
 
 
 class Status(models.Model):
@@ -219,5 +220,5 @@ class Resource(models.Model):
     testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
     testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
 
-    file = models.FileField(upload_to=resource_filepath_function)
+    file = models.FileField(upload_to=resource_filepath_function, storage=HiPerGatorStorage)
 
