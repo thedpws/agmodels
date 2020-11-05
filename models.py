@@ -136,10 +136,8 @@ class TestCase(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
 
     # Tokenization
-    input_resource_files = models.FileField(upload_to=testcase_input_resource_function, blank=True)
     stdin = models.CharField(max_length=1_000_000, blank=True)
 
-    output_resource_files = models.FileField(upload_to=testcase_output_resource_function, blank=True)
     stdout = models.CharField(max_length=1_000_000, blank=True)
 
     hidden = models.BooleanField(default=False)
