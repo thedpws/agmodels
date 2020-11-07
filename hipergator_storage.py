@@ -10,7 +10,9 @@ class HiPerGatorStorage(Storage):
         #option = option if option else settings.CUSTOM_STORAGE_OPTIONS
 
     def _open(self, filepath, mode='rb'):
-        return File(self.hpg.open_file(filepath, mode, from_storage=True))
+        with self.hpg.open_file(filepath, mode, from_storage=True) as f:
+            g = File(f)
+        return g
 
     def _save(self, filepath, content):
         with self.hpg.open_file(filepath, 'wb', from_storage=True) as f:
