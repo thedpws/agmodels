@@ -206,11 +206,11 @@ class CodeSimilarity(models.Model):
 
 def resource_filepath_function(resource, filename):
     if resource.task:
-        return f'resources/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.description if c.isalnum()])}/resources/{filename}'
+        return f'resources/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.name if c.isalnum()])}/resources/{filename}'
     elif resource.testcase_as_input:
-        return f'resources/{resource.testcase_as_input.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()])}/inputs/{filename}'
+        return f'resources/{resource.testcase_as_input.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()]) + str(resource.testcase_as_input.pk)}/inputs/{filename}'
     elif resource.testcase_as_output:
-        return f'resources/{resource.testcase_as_output.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.description if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()])}/outputs/{filename}'
+        return f'resources/{resource.testcase_as_output.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()]) + str(resource.testcase_as_output.pk)}/outputs/{filename}'
     else:
         return f'orphan_resources/{filename}'
 
