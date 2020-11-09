@@ -90,6 +90,7 @@ class Task(models.Model):
     ignore_numerical = models.BooleanField(default=False)
     ignore_alphabetical = models.BooleanField(default=False)
     ignore_punctuation = models.BooleanField(default=False)
+    similarity_required = models.FloatField(default=1.00)
 
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
 
