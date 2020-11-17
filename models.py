@@ -95,6 +95,7 @@ class Task(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
 
     preprocess_function = models.CharField(max_length=200, blank=True, default='')
+    postprocess_function = models.CharField(max_length=200, blank=True, default='')
 
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
