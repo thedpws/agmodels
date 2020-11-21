@@ -1,5 +1,4 @@
 from django.db import models
-from .hipergator_storage import HiPerGatorStorage
 
 
 class Status(models.Model):
