@@ -198,10 +198,14 @@ class CodeSimilarity(models.Model):
     submission_1 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_1")
     similar_code_1 = models.CharField(max_length=50_000)
     percent_similar_1 = models.DecimalField(decimal_places=2, max_digits=4)
+    text1 = models.CharField(max_length=50_000)
+    filename1 = models.CharField(max_length=60)
 
     submission_2 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_2")
     similar_code_2 = models.CharField(max_length=50_000)
     percent_similar_2 = models.DecimalField(decimal_places=2, max_digits=4)
+    text2 = models.CharField(max_length=50_000)
+    filename2 = models.CharField(max_length=60)
 
 
 def resource_filepath_function(resource, filename):
