@@ -4,6 +4,7 @@ from django.db import models
 class Status(models.Model):
     update_date = models.DateTimeField(auto_now=True)
 
+
 class Course(models.Model):
     lms_id = models.CharField(max_length=20)
 
@@ -30,6 +31,9 @@ class Assignment(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
+    # default is invalid for quiz assignments
+    grading_strategy = models.CharField(max_length=100, blank=False, default='grade_if_none_required_failing')
+
     def __str__(self):
         return f'{self.name} (Course {self.course})'
 
@@ -52,6 +56,7 @@ def task_resource_function(task, filename):
     return f'uploads/solutions/{task.assignment.id}/{task.id}_{filename}'
 
 
+
 class Task(models.Model):
 
     def __str__(self):
@@ -61,8 +66,15 @@ class Task(models.Model):
 
     correct_program = models.FileField(upload_to=task_resource_function, blank=True)
 
-
     name = models.CharField(max_length=20)
+
+    lms_question_id = models.CharField(max_length=20, blank=True, default='')
+
+    points_possible = models.FloatField(blank=True, default=0.0)
+
+    is_manual_grade = models.BooleanField(blank=True, default=False)
+
+    is_extra_credit = models.BooleanField(blank=True, default=False)
 
     language = models.CharField(max_length=20, choices=[
         ('python3', 'Python3'),
@@ -71,16 +83,18 @@ class Task(models.Model):
         ('matlab', 'MATLAB')
     ])
 
-    # startswith, endswith, contains, matches regex
+    # TODO: WILL DEPRECATE FILENAME-MATCHING VIA THESE FIELDS BELOW. Prefer the SubmissionFile.
     filename_match_function = models.CharField(max_length=20, choices=[
         ('startswith', 'Starts with'),
         ('endswith', 'Ends with'),
         ('contains', 'Contains'),
         ('matches', 'Matches regex'),
     ])
-
-    # Lab3.m
     filename_match_pattern = models.CharField(max_length=65)
+
+    # Allow blank for non-submission driver files!
+    driver_filename = models.ForeignKey('FilenameMatch', on_delete=models.DO_NOTHING, blank=True,
+                                        related_name='driver_submission_file', null=True)
 
     # Capabilities
     lenient_whitespace = models.BooleanField(default=False)
@@ -114,6 +128,25 @@ class Task(models.Model):
             'ignore_case': self.ignore_case,
             'testcases': [testcase.export_dict() for testcase in self.testcase_set.all()],
         }
+
+
+class FilenameMatch(models.Model):
+    """A Utility for matching filenames"""
+
+    # This is blank when used as a driver filename
+    task_as_submission_filename = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='submission_filenames',
+                                                    blank=True, null=True)
+
+    # startswith, endswith, contains, matches regex
+    filename_match_function = models.CharField(max_length=20, choices=[
+        ('startswith', 'Starts with'),
+        ('endswith', 'Ends with'),
+        ('contains', 'Contains'),
+        ('matches', 'Matches regex'),
+    ])
+
+    # Lab3.m
+    filename_match_pattern = models.CharField(max_length=65)
 
 
 def testcase_input_resource_function(testcase, filename):
@@ -218,8 +251,9 @@ def resource_filepath_function(resource, filename):
 
 class Resource(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True, related_name='task_resources')
-    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
-    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
+    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True,
+                                          related_name='input_resources')
+    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True,
+                                           related_name='output_resources')
 
-    file = models.FileField(upload_to=resource_filepath_function)
-
+    file = models.FileField(upload_to=resource_filepath_function, max_length=500)
