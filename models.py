@@ -92,7 +92,7 @@ class Task(models.Model):
     ])
     filename_match_pattern = models.CharField(max_length=65)
 
-    # Allow blank for non-submission driver files!
+    # driver_filename is independent of submission files. It may be a submission file or a provided resource file. The file referred to by this field will be executed at runtime.
     driver_filename = models.ForeignKey('FilenameMatch', on_delete=models.DO_NOTHING, blank=True,
                                         related_name='driver_submission_file', null=True)
 
