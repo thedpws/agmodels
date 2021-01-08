@@ -32,7 +32,7 @@ class Assignment(models.Model):
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
     # default is invalid for quiz assignments
-    grading_strategy = models.CharField(max_length=100, blank=False, default='grade_if_none_required_failing')
+    grading_strategy = models.CharField(max_length=100, blank=False, default='grade_tasks_passing')
 
     def __str__(self):
         return f'{self.name} (Course {self.course})'
