@@ -10,6 +10,8 @@ class Course(models.Model):
 
     name = models.CharField(max_length=100, blank=True, null=True)
 
+    enabled = models.BooleanField(default=True)
+
     def __str__(self):
         return f'Course {self.lms_id}'
 
