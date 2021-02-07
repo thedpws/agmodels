@@ -183,7 +183,7 @@ class TestCase(models.Model):
 
     description = models.CharField(max_length=1000)
 
-    insert_code = models.CharField(max_length=2000, blank=True, default='')
+    insert_code_before = models.CharField(max_length=2000, blank=True, default='')
 
     rng_seed = models.PositiveIntegerField(blank=True, null=True)
 
