@@ -31,6 +31,7 @@ class Assignment(models.Model):
     enabled = models.BooleanField(default=False)
     error = models.BooleanField(default=False)
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
+    mandatory_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
     message = models.CharField(max_length=100, blank=True)
