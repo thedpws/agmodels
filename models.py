@@ -31,7 +31,6 @@ class Assignment(models.Model):
     enabled = models.BooleanField(default=False)
     error = models.BooleanField(default=False)
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
-    mandatory_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
     message = models.CharField(max_length=100, blank=True)
@@ -112,6 +111,7 @@ class Task(models.Model):
     similarity_required = models.FloatField(default=1.00)
 
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
+    mandatory_functions = models.CharField(max_length=200, blank=True, default='')
 
     preprocess_function = models.CharField(max_length=200, blank=True, default='')
     postprocess_function = models.CharField(max_length=200, blank=True, default='')
