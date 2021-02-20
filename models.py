@@ -232,6 +232,7 @@ class TestcaseResult(models.Model):
     program_error = models.CharField(max_length=1_000_000)
 
 
+# Deprecated! Prefer { Program, CodeBlock, CodeBlockSimilarity }
 class CodeSimilarity(models.Model):
     submission_1 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_1")
     similar_code_1 = models.CharField(max_length=50_000)
@@ -240,6 +241,21 @@ class CodeSimilarity(models.Model):
     submission_2 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_2")
     similar_code_2 = models.CharField(max_length=50_000)
     percent_similar_2 = models.DecimalField(decimal_places=2, max_digits=4)
+
+class Program(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING)
+    filename = models.CharField(max_length=100)
+    code = models.CharField(max_length=10_000)
+    programming_language = models.CharField(max_length=100)
+
+class CodeBlock(models.Model):
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    line_start_index = models.PositiveIntegerField()
+    line_end_index = models.PositiveIntegerField()
+
+class CodeBlockSimilarity(models.Model):
+    code_block_1 = models.ForeignKey(CodeBlock, related_name="code_block_1", on_delete=models.CASCADE)
+    code_block_2 = models.ForeignKey(CodeBlock, related_name="code_block_2", on_delete=models.CASCADE)
 
 
 def resource_filepath_function(resource, filename):
