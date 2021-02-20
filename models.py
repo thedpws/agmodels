@@ -33,6 +33,15 @@ class Assignment(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
+    message = models.CharField(max_length=100, blank=True)
+
+    language = models.CharField(max_length=20, choices=[
+        ('python3', 'Python3'),
+        ('cpp', 'C++'),
+        ('c', 'C'),
+        ('matlab', 'MATLAB')
+    ])
+
     # default is invalid for quiz assignments
     grading_strategy = models.CharField(max_length=100, blank=False, default='grade_tasks_passing')
 
@@ -78,12 +87,6 @@ class Task(models.Model):
 
     is_extra_credit = models.BooleanField(blank=True, default=False)
 
-    language = models.CharField(max_length=20, choices=[
-        ('python3', 'Python3'),
-        ('cpp', 'C++'),
-        ('c', 'C'),
-        ('matlab', 'MATLAB')
-    ])
 
     # TODO: WILL DEPRECATE FILENAME-MATCHING VIA THESE FIELDS BELOW. Prefer the SubmissionFile.
     filename_match_function = models.CharField(max_length=20, choices=[
@@ -108,6 +111,7 @@ class Task(models.Model):
     similarity_required = models.FloatField(default=1.00)
 
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
+    mandatory_functions = models.CharField(max_length=200, blank=True, default='')
 
     preprocess_function = models.CharField(max_length=200, blank=True, default='')
     postprocess_function = models.CharField(max_length=200, blank=True, default='')
