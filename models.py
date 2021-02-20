@@ -259,9 +259,16 @@ class CodeBlock(models.Model):
     line_start_index = models.PositiveIntegerField()
     line_end_index = models.PositiveIntegerField()
 
+# Link to Assignment. Don't link to Task. Linking from program to task is not guaranteed (incorrect filename).
+# We don't want to limit plagiarism checks to only the valid programs.
+class PlagiarismCheck(models.Model):
+    updated_at = models.DateTimeField(auto_now=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
+
 class CodeBlockSimilarity(models.Model):
     code_block_1 = models.ForeignKey(CodeBlock, related_name="code_block_1", on_delete=models.CASCADE)
     code_block_2 = models.ForeignKey(CodeBlock, related_name="code_block_2", on_delete=models.CASCADE)
+    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="plagiarism_check", on_delete = models.CASCADE)
 
 
 def resource_filepath_function(resource, filename):
