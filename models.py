@@ -262,7 +262,7 @@ class CodeBlock(models.Model):
 # Link to Assignment. Don't link to Task. Linking from program to task is not guaranteed (incorrect filename).
 # We don't want to limit plagiarism checks to only the valid programs.
 class PlagiarismCheck(models.Model):
-    updated_at = models.DateTimeField(auto_now=True)
+    performed_at = models.DateTimeField(auto_now_add=True)
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
 
 class CodeBlockSimilarity(models.Model):
