@@ -256,8 +256,8 @@ class Program(models.Model):
 
 class CodeBlock(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    line_start_index = models.PositiveIntegerField()
-    line_end_index = models.PositiveIntegerField()
+    start_index = models.PositiveIntegerField()
+    end_index = models.PositiveIntegerField()
 
 # Link to Assignment. Don't link to Task. Linking from program to task is not guaranteed (incorrect filename).
 # We don't want to limit plagiarism checks to only the valid programs.
