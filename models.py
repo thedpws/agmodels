@@ -35,6 +35,8 @@ class Assignment(models.Model):
 
     message = models.CharField(max_length=100, blank=True)
 
+    has_updated_plagiarism_check = models.BooleanField(default=False)
+
     language = models.CharField(max_length=20, choices=[
         ('python3', 'Python3'),
         ('cpp', 'C++'),
