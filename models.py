@@ -35,6 +35,8 @@ class Assignment(models.Model):
 
     message = models.CharField(max_length=100, blank=True)
 
+    has_updated_plagiarism_check = models.BooleanField(default=False)
+
     language = models.CharField(max_length=20, choices=[
         ('python3', 'Python3'),
         ('cpp', 'C++'),
@@ -248,10 +250,14 @@ class CodeSimilarity(models.Model):
     submission_1 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_1")
     similar_code_1 = models.CharField(max_length=50_000)
     percent_similar_1 = models.DecimalField(decimal_places=2, max_digits=4)
+    text1 = models.CharField(max_length=50_000)
+    filename1 = models.CharField(max_length=60)
 
     submission_2 = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, related_name="submission_2")
     similar_code_2 = models.CharField(max_length=50_000)
     percent_similar_2 = models.DecimalField(decimal_places=2, max_digits=4)
+    text2 = models.CharField(max_length=50_000)
+    filename2 = models.CharField(max_length=60)
 
 class Program(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
@@ -294,9 +300,7 @@ def resource_filepath_function(resource, filename):
 
 class Resource(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True, related_name='task_resources')
-    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True,
-                                          related_name='input_resources')
-    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True,
-                                           related_name='output_resources')
+    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
+    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
 
-    file = models.FileField(upload_to=resource_filepath_function, max_length=500)
+    file = models.FileField(upload_to=resource_filepath_function)
