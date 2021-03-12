@@ -254,8 +254,8 @@ class CodeSimilarity(models.Model):
     percent_similar_2 = models.DecimalField(decimal_places=2, max_digits=4)
 
 class Program(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True)
-    submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, null=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
+    submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     author = models.ForeignKey(Person, on_delete=models.CASCADE)
     filename = models.CharField(max_length=100)
     code = models.CharField(max_length=10_000)
