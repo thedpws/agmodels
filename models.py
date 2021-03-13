@@ -286,6 +286,13 @@ class CodeBlockSimilarity(models.Model):
     code_block_2 = models.ForeignKey(CodeBlock, related_name="code_block_2", on_delete=models.CASCADE)
     plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="code_block_similarities", on_delete = models.CASCADE)
 
+class SimilarPrograms(models.Model):
+    program_1 = models.ForeignKey(Program, related_name="similar_programs", on_delete=models.CASCADE)
+    program_2 = models.ForeignKey(Program, on_delete=models.CASCADE)
+    program_1_percent_similar = models.FloatField()
+    program_2_percent_similar = models.FloatField()
+    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="program_similarities", on_delete = models.CASCADE)
+
 
 def resource_filepath_function(resource, filename):
     if resource.task:
