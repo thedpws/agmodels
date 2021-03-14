@@ -1,4 +1,5 @@
 from django.db import models
+from .canvas import DjangoCanvasStorage
 
 
 class Status(models.Model):
@@ -61,12 +62,8 @@ class Assignment(models.Model):
         }
 
 
-def task_filename_function(task, filename):
-    return f'uploads/solutions/{task.assignment.id}/{task.id}_{filename}'
-
-
 def task_resource_function(task, filename):
-    return f'uploads/solutions/{task.assignment.id}/{task.id}_{filename}'
+    return f'{task.assignment.course.lms_id}/solutions/{task.assignment.id}/{task.id}_{filename}'
 
 
 
@@ -84,7 +81,7 @@ class Task(models.Model):
 
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
 
-    correct_program = models.FileField(upload_to=task_resource_function, blank=True)
+    correct_program = models.FileField(storage=DjangoCanvasStorage, upload_to=task_resource_function, blank=True)
 
     name = models.CharField(max_length=20)
 
@@ -296,13 +293,13 @@ class SimilarPrograms(models.Model):
 
 def resource_filepath_function(resource, filename):
     if resource.task:
-        return f'resources/{resource.task.assignment.course.lms_id}/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.name if c.isalnum()])}/resources/{filename}'
+        return f'{resource.task.assignment.course.lms_id}/resources/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.name if c.isalnum()])}/resources/{filename}'
     elif resource.testcase_as_input:
-        return f'resources/{resource.testcase_as_input.task.assignment.course.lms_id}/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()]) + str(resource.testcase_as_input.pk)}/inputs/{filename}'
+        return f'{resource.testcase_as_input.task.assignment.course.lms_id}/resources/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()]) + str(resource.testcase_as_input.pk)}/inputs/{filename}'
     elif resource.testcase_as_output:
-        return f'resources/{resource.testcase_as_output.task.assignment.course.lms_id}/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()]) + str(resource.testcase_as_output.pk)}/outputs/{filename}'
+        return f'{resource.testcase_as_output.task.assignment.course.lms_id}/resources/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()]) + str(resource.testcase_as_output.pk)}/outputs/{filename}'
     else:
-        return f'orphan_resources/{filename}'
+        return f'388639/orphan_resources/{filename}'
 
 
 class Resource(models.Model):
@@ -310,4 +307,4 @@ class Resource(models.Model):
     testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
     testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
 
-    file = models.FileField(upload_to=resource_filepath_function)
+    file = models.FileField(storage=DjangoCanvasStorage, upload_to=resource_filepath_function)
