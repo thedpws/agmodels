@@ -74,6 +74,19 @@ class CanvasFile(io.FileIO):
         else:
             return b''
 
+    def exists(self) -> bool:
+
+        dirname = os.path.dirname(self._filepath)
+        filename = os.path.basename(self._filepath)
+
+        destination_folder = self._get_folder(dirname)
+
+        for file in destination_folder.get_files():
+           if file.display_name == filename:
+               return True
+        else:
+            return False
+
 
 class CanvasFileStorage(object):
     def __init__(self, course_id: Union[str, int]):
@@ -83,3 +96,7 @@ class CanvasFileStorage(object):
     def open(self, filepath: str):
         filepath = filepath.removeprefix('/')
         yield CanvasFile(self._canvasapi_course, filepath)
+
+    def exists(self, filepath: str):
+        filepath = filepath.removeprefix('/')
+        return CanvasFile(self._canvasapi_course, filepath).exists()
