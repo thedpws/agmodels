@@ -12,13 +12,14 @@ class DjangoCanvasStorage(Storage):
         return CanvasFileStorage(course_id).open(name)
 
     def _save(self, name, content):
+        original_name = name
         course_id = name.split('/')[0]
         name = name.removeprefix('/').removeprefix(course_id)
 
         with CanvasFileStorage(course_id).open(name) as f:
             f.write(content.read())
 
-        return name
+        return original_name
 
     def exists(self, name):
         course_id = name.split('/')[0]
