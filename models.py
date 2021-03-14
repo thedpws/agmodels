@@ -292,12 +292,30 @@ class SimilarPrograms(models.Model):
 
 
 def resource_filepath_function(resource, filename):
+
     if resource.task:
-        return f'{resource.task.assignment.course.lms_id}/resources/{resource.task.assignment.lms_id}/{"".join([c for c in resource.task.name if c.isalnum()])}/resources/{filename}'
+        course_id = resource.task.assignment.course.lms_id
+        assignment_name = resource.task.assignment.name
+        assignment_id = resource.task.assignment.lms_id
+        task_name = resource.task.name
+        return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{filename}'
+
     elif resource.testcase_as_input:
-        return f'{resource.testcase_as_input.task.assignment.course.lms_id}/resources/{resource.testcase_as_input.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_input.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_input.description if c.isalnum()]) + str(resource.testcase_as_input.pk)}/inputs/{filename}'
+        course_id = resource.testcase_as_input.task.assignment.course.lms_id
+        assignment_id = resource.testcase_as_input.task.assignment.lms_id
+        assignment_name = resource.testcase_as_input.task.assignment.name
+        task_name = resource.testcase_as_input.task.name
+        testcase_name = resource.testcase_as_input.description
+        testcase_id = resource.testcase_as_input.id
+        return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{testcase_name} ({testcase_id})/inputs/{filename}'
     elif resource.testcase_as_output:
-        return f'{resource.testcase_as_output.task.assignment.course.lms_id}/resources/{resource.testcase_as_output.task.assignment.lms_id}/{"".join([c for c in resource.testcase_as_output.task.name if c.isalnum()])}/{"".join([c for c in resource.testcase_as_output.description if c.isalnum()]) + str(resource.testcase_as_output.pk)}/outputs/{filename}'
+        course_id = resource.testcase_as_output.task.assignment.course.lms_id
+        assignment_id = resource.testcase_as_output.task.assignment.lms_id
+        assignment_name = resource.testcase_as_output.task.assignment.name
+        task_name = resource.testcase_as_output.task.name
+        testcase_name = resource.testcase_as_output.description
+        testcase_id = resource.testcase_as_output.id
+        return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{testcase_name} ({testcase_id})/outputs/{filename}'
     else:
         return f'388639/orphan_resources/{filename}'
 
@@ -307,4 +325,4 @@ class Resource(models.Model):
     testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
     testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
 
-    file = models.FileField(storage=DjangoCanvasStorage, upload_to=resource_filepath_function)
+    file = models.FileField(storage=DjangoCanvasStorage, upload_to=resource_filepath_function, max_length=500)
