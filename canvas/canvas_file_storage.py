@@ -87,15 +87,17 @@ class CanvasFile(io.FileIO):
         else:
             return False
 
+    def open(self, mode):
+        return self
+
 
 class CanvasFileStorage(object):
     def __init__(self, course_id: Union[str, int]):
         self._canvasapi_course = canvas.get_course(course_id)
 
-    @contextmanager
     def open(self, filepath: str):
         filepath = filepath.removeprefix('/')
-        yield CanvasFile(self._canvasapi_course, filepath)
+        return CanvasFile(self._canvasapi_course, filepath)
 
     def exists(self, filepath: str):
         filepath = filepath.removeprefix('/')
