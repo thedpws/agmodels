@@ -23,6 +23,12 @@ class CanvasFile(io.FileIO):
         self._canvasapi_course = canvasapi_course
         self._filepath = filepath
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
     def _get_folder(self, dirname: str):
         dirname = '/'.join([AG_ROOT_FULLPATH, dirname])
 
@@ -89,6 +95,9 @@ class CanvasFile(io.FileIO):
 
     def open(self, mode):
         return self
+
+    def close(self):
+        pass
 
 
 class CanvasFileStorage(object):
