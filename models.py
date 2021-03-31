@@ -34,8 +34,7 @@ class Assignment(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
-    passing_comment = models.CharField(max_length=500, blank=True, default='')
-    failing_comment = models.CharField(max_length=500, blank=True, default='')
+    message = models.CharField(max_length=100, blank=True)
 
     has_updated_plagiarism_check = models.BooleanField(default=False)
 
@@ -129,9 +128,6 @@ class Task(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
-    passing_comment = models.CharField(max_length=500, blank=True, default='')
-    failing_comment = models.CharField(max_length=500, blank=True, default='')
-
     def testcase_list(self):
         return self.testcase_set.all()
 
@@ -203,9 +199,6 @@ class TestCase(models.Model):
     insert_code_before = models.CharField(max_length=2000, blank=True, default='')
 
     rng_seed = models.PositiveIntegerField(blank=True, null=True)
-
-    passing_comment = models.CharField(max_length=500, blank=True, default='')
-    failing_comment = models.CharField(max_length=500, blank=True, default='')
 
     def export_dict(self):
         return {
