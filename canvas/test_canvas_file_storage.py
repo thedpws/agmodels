@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import Mock
+from unittest import skip
 from .canvas_file_storage import CanvasFileStorage
 
+@skip('Requires valid CANVAS_API_KEY in environment')
 class CanvasFileStorageTests(unittest.TestCase):
 
     def setUp(self):
