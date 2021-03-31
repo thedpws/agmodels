@@ -107,6 +107,9 @@ class Task(models.Model):
     driver_filename = models.ForeignKey('FilenameMatch', on_delete=models.DO_NOTHING, blank=True,
                                         related_name='driver_submission_file', null=True)
 
+    compile_script_filename = models.CharField(max_length=65, blank=True, default=None, null=True)
+    execute_script_filename = models.CharField(max_length=65, blank=True, default=None, null=True)
+
     # Capabilities
     lenient_whitespace = models.BooleanField(default=False)
     ignore_whitespace = models.BooleanField(default=False)
