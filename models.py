@@ -66,7 +66,6 @@ def task_resource_function(task, filename):
     return f'{task.assignment.course.lms_id}/solutions/{task.assignment.id}/{task.id}_{filename}'
 
 
-
 class Task(models.Model):
 
     def __str__(self):
@@ -93,7 +92,6 @@ class Task(models.Model):
 
     is_extra_credit = models.BooleanField(blank=True, default=False)
 
-
     # TODO: WILL DEPRECATE FILENAME-MATCHING VIA THESE FIELDS BELOW. Prefer the SubmissionFile.
     filename_match_function = models.CharField(max_length=20, choices=[
         ('startswith', 'Starts with'),
@@ -103,7 +101,9 @@ class Task(models.Model):
     ])
     filename_match_pattern = models.CharField(max_length=65)
 
-    # driver_filename is independent of submission files. It may be a submission file or a provided resource file. The file referred to by this field will be executed at runtime.
+    # driver_filename is independent of submission files.
+    # It may be a submission file or a provided resource file.
+    # The file referred to by this field will be executed at runtime.
     driver_filename = models.ForeignKey('FilenameMatch', on_delete=models.DO_NOTHING, blank=True,
                                         related_name='driver_submission_file', null=True)
 
@@ -256,6 +256,7 @@ class CodeSimilarity(models.Model):
     text2 = models.CharField(max_length=50_000)
     filename2 = models.CharField(max_length=60)
 
+
 class Program(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, null=True, related_name='programs')
@@ -263,6 +264,7 @@ class Program(models.Model):
     filename = models.CharField(max_length=100)
     code = models.CharField(max_length=10_000)
     programming_language = models.CharField(max_length=100)
+
 
 class CodeBlock(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
@@ -272,23 +274,26 @@ class CodeBlock(models.Model):
     def get_text(self) -> str:
         return self.program.code[self.start_index:self.end_index]
 
+
 # Link to Assignment. Don't link to Task. Linking from program to task is not guaranteed (incorrect filename).
 # We don't want to limit plagiarism checks to only the valid programs.
 class PlagiarismCheck(models.Model):
     performed_at = models.DateTimeField(auto_now_add=True)
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
 
+
 class CodeBlockSimilarity(models.Model):
     code_block_1 = models.ForeignKey(CodeBlock, related_name="code_block_1", on_delete=models.CASCADE)
     code_block_2 = models.ForeignKey(CodeBlock, related_name="code_block_2", on_delete=models.CASCADE)
-    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="code_block_similarities", on_delete = models.CASCADE)
+    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="code_block_similarities", on_delete=models.CASCADE)
+
 
 class SimilarPrograms(models.Model):
     program_1 = models.ForeignKey(Program, related_name="similar_programs", on_delete=models.CASCADE)
     program_2 = models.ForeignKey(Program, on_delete=models.CASCADE)
     program_1_percent_similar = models.FloatField()
     program_2_percent_similar = models.FloatField()
-    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="program_similarities", on_delete = models.CASCADE)
+    plagiarism_check = models.ForeignKey(PlagiarismCheck, related_name="program_similarities", on_delete=models.CASCADE)
 
 
 def resource_filepath_function(resource, filename):
@@ -301,28 +306,41 @@ def resource_filepath_function(resource, filename):
         return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{filename}'
 
     elif resource.testcase_as_input:
-        course_id = resource.testcase_as_input.task.assignment.course.lms_id
-        assignment_id = resource.testcase_as_input.task.assignment.lms_id
-        assignment_name = resource.testcase_as_input.task.assignment.name
-        task_name = resource.testcase_as_input.task.name
-        testcase_name = resource.testcase_as_input.description
-        testcase_id = resource.testcase_as_input.id
-        return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{testcase_name} ({testcase_id})/inputs/{filename}'
+        c_id = resource.testcase_as_input.task.assignment.course.lms_id
+        a_id = resource.testcase_as_input.task.assignment.lms_id
+        a_name = resource.testcase_as_input.task.assignment.name
+        t_name = resource.testcase_as_input.task.name
+        tc_name = resource.testcase_as_input.description
+        tc_id = resource.testcase_as_input.id
+        return f'{c_id}/resources/{a_name} ({a_id})/{task_name}/{tc_name} ({tc_id})/inputs/{filename}'
     elif resource.testcase_as_output:
-        course_id = resource.testcase_as_output.task.assignment.course.lms_id
-        assignment_id = resource.testcase_as_output.task.assignment.lms_id
-        assignment_name = resource.testcase_as_output.task.assignment.name
-        task_name = resource.testcase_as_output.task.name
-        testcase_name = resource.testcase_as_output.description
-        testcase_id = resource.testcase_as_output.id
-        return f'{course_id}/resources/{assignment_name} ({assignment_id})/{task_name}/{testcase_name} ({testcase_id})/outputs/{filename}'
+        c_id = resource.testcase_as_output.task.assignment.course.lms_id
+        a_id = resource.testcase_as_output.task.assignment.lms_id
+        a_name = resource.testcase_as_output.task.assignment.name
+        t_name = resource.testcase_as_output.task.name
+        tc_name = resource.testcase_as_output.description
+        tc_id = resource.testcase_as_output.id
+        return f'{c_id}/resources/{a_name} ({a_id})/{t_name}/{tc_name} ({tc_id})/outputs/{filename}'
     else:
-        return f'388639/orphan_resources/{filename}'
+        raise Exception(f'Orphaned filename {filename}')
 
 
 class Resource(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True, related_name='task_resources')
-    testcase_as_input = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='input_resources')
-    testcase_as_output = models.ForeignKey(TestCase, on_delete=models.CASCADE, blank=True, null=True, related_name='output_resources')
+    testcase_as_input = models.ForeignKey(
+        TestCase,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='input_resources'
+    )
+
+    testcase_as_output = models.ForeignKey(
+        TestCase,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='output_resources'
+    )
 
     file = models.FileField(storage=DjangoCanvasStorage, upload_to=resource_filepath_function, max_length=500)

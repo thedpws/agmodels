@@ -1,6 +1,7 @@
 from django.core.files.storage import Storage
 from .canvas_file_storage import CanvasFileStorage
 
+
 class DjangoCanvasStorage(Storage):
     def __init__(self, option=None):
         pass
