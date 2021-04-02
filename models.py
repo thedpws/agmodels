@@ -34,6 +34,7 @@ class Assignment(models.Model):
     restricted_functions = models.CharField(max_length=200, blank=True, default='')
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
+    # A note to appear at the top of every report
     report_note = models.CharField(max_length=100, blank=True)
 
     has_updated_plagiarism_check = models.BooleanField(default=False)
