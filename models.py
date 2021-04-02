@@ -35,7 +35,7 @@ class Assignment(models.Model):
     assignment_group_name = models.CharField(max_length=100, blank=True)
 
     # A note to appear at the top of every report
-    report_note = models.CharField(max_length=100, blank=True)
+    report_note = models.CharField(max_length=1000, blank=True)
 
     has_updated_plagiarism_check = models.BooleanField(default=False)
 
