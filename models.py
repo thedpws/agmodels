@@ -263,7 +263,6 @@ class CodeSimilarity(models.Model):
 
 class Program(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
-    submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     author = models.ForeignKey(Person, on_delete=models.CASCADE)
     filename = models.CharField(max_length=100)
     code = models.CharField(max_length=10_000)
@@ -316,7 +315,7 @@ def resource_filepath_function(resource, filename):
         t_name = resource.testcase_as_input.task.name
         tc_name = resource.testcase_as_input.description
         tc_id = resource.testcase_as_input.id
-        return f'{c_id}/resources/{a_name} ({a_id})/{task_name}/{tc_name} ({tc_id})/inputs/{filename}'
+        return f'{c_id}/resources/{a_name} ({a_id})/{t_name}/{tc_name} ({tc_id})/inputs/{filename}'
     elif resource.testcase_as_output:
         c_id = resource.testcase_as_output.task.assignment.course.lms_id
         a_id = resource.testcase_as_output.task.assignment.lms_id
