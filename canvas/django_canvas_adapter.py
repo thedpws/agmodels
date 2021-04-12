@@ -27,3 +27,9 @@ class DjangoCanvasStorage(Storage):
         name = name.removeprefix('/').removeprefix(course_id)
 
         return CanvasFileStorage(course_id).exists(name)
+
+    # TODO: Delete file if exists...
+    def get_available_name(self, name, max_length):
+        original_name = name
+
+        return original_name

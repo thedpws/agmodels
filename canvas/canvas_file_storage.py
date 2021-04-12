@@ -93,6 +93,19 @@ class CanvasFile(io.FileIO):
         else:
             return False
 
+    def delete(self) -> bool:
+
+        dirname = os.path.dirname(self._filepath)
+        filename = os.path.basename(self._filepath)
+
+        destination_folder = self._get_folder(dirname)
+
+        for file in destination_folder.get_files():
+            if file.display_name == filename:
+                file.delete()
+        else:
+            raise FileNotFoundError(f'Canvas File {self._filepath} does not exist!')
+
     def open(self, mode):
         return self
 
@@ -102,7 +115,7 @@ class CanvasFile(io.FileIO):
 
 class CanvasFileStorage(object):
     def __init__(self, course_id: Union[str, int]):
-        self._canvasapi_course = canvas.get_course(course_id)
+        self._canvasapi_course = canvas.get_course(int(course_id))
 
     def open(self, filepath: str):
         filepath = filepath.removeprefix('/')
@@ -111,3 +124,7 @@ class CanvasFileStorage(object):
     def exists(self, filepath: str):
         filepath = filepath.removeprefix('/')
         return CanvasFile(self._canvasapi_course, filepath).exists()
+
+    def delete(self, filepath: str):
+        filepath = filepath.removeprefix('/')
+        return CanvasFile(self._canvasapi_course, filepath).delete()
