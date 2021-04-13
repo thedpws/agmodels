@@ -224,6 +224,7 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
     student = models.ForeignKey(Person, on_delete=models.DO_NOTHING)
     attempt = models.IntegerField()
+    autograded = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('lms_id', 'attempt')
@@ -262,6 +263,7 @@ class CodeSimilarity(models.Model):
 
 
 class Program(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     author = models.ForeignKey(Person, on_delete=models.CASCADE)
     filename = models.CharField(max_length=100)
