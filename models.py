@@ -72,13 +72,6 @@ class Task(models.Model):
     def __str__(self):
         return f'{self.assignment} (Course {self.assignment.course}): {self.name}'
 
-    language = models.CharField(max_length=20, choices=[
-        ('python3', 'Python3'),
-        ('cpp', 'C++'),
-        ('c', 'C'),
-        ('matlab', 'MATLAB')
-    ])
-
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
 
     correct_program = models.FileField(storage=DjangoCanvasStorage, upload_to=task_resource_function, blank=True)
