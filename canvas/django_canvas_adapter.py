@@ -33,3 +33,6 @@ class DjangoCanvasStorage(Storage):
         original_name = name
 
         return original_name
+
+    def url(self, name):
+        raise NotImplementedError('CanvasStorage does not support public URL\'s')
