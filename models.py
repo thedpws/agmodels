@@ -151,6 +151,7 @@ class FilenameMatch(models.Model):
         ('startswith', 'Starts with'),
         ('endswith', 'Ends with'),
         ('contains', 'Contains'),
+        ('exact', 'Exact match'),
         ('matches', 'Matches regex'),
     ])
 
