@@ -261,7 +261,7 @@ class Program(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True, related_name='programs')
     author = models.ForeignKey(Person, on_delete=models.CASCADE)
     filename = models.CharField(max_length=100)
-    code = models.CharField(max_length=10_000)
+    code = models.CharField(max_length=10_000_000)
     programming_language = models.CharField(max_length=100)
 
 
